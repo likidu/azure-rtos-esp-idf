@@ -1,3 +1,9 @@
+.DS_Store
+
+# Build files
+build
+!docker/hooks/build
+
 # Prerequisites
 *.d
 
