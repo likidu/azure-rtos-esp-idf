@@ -1,58 +1,46 @@
-cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
+idf_build_get_property(idf_target IDF_TARGET)
 
-# Set up the project
-project(threadx
-    VERSION 6.0.0 
-    LANGUAGES C ASM
+idf_component_register(SRCS ""
+    INCLUDE_DIRS "threadx/common/inc" "threadx/ports/${THREADX_ARCH}/${THREADX_TOOLCHAIN}/inc"
+    REQUIRES lwip
+    PRIV_REQUIRES soc)
+
+
+
+# Needed to for include_next includes to work from within mbedtls
+# include_directories("${COMPONENT_DIR}/port/include")
+
+# Import threadx library targets
+add_subdirectory(threadx)
+
+set(threadx_targets threadx)
+
+set(mbedtls_target_sources "${COMPONENT_DIR}/port/mbedtls_debug.c"
+                           "${COMPONENT_DIR}/port/net_sockets.c")
+
+
+# Add port files to mbedtls targets
+target_sources(mbedtls PRIVATE ${mbedtls_target_sources})
+
+
+target_sources(mbedcrypto PRIVATE "${COMPONENT_DIR}/port/esp_hardware.c"
+                                  "${COMPONENT_DIR}/port/esp_mem.c"
+                                  "${COMPONENT_DIR}/port/esp_timing.c"
+                                  "${COMPONENT_DIR}/port/sha/esp_sha.c"
+                                  "${COMPONENT_DIR}/port/aes/esp_aes_xts.c"
+                                  "${COMPONENT_DIR}/port/aes/esp_aes_common.c"
+                                  "${COMPONENT_DIR}/port/aes/${AES_PERIPHERAL_TYPE}/esp_aes.c"
+                                  "${COMPONENT_DIR}/port/sha/${SHA_PERIPHERAL_TYPE}/sha.c"
+                                  "${SHA_DMA_SRCS}"
+                                  "${AES_DMA_SRCS}"
 )
 
-if(NOT DEFINED THREADX_ARCH)
-    message(FATAL_ERROR "Error: THREADX_ARCH not defined")
-endif()
-if(NOT DEFINED THREADX_TOOLCHAIN)
-    message(FATAL_ERROR "Error: THREADX_TOOLCHAIN not defined")
-endif()
-
-# Define our target library and an alias for consumers
-add_library(${PROJECT_NAME})
-add_library("azrtos::${PROJECT_NAME}" ALIAS ${PROJECT_NAME})
-
-# A place for generated/copied include files (no need to change)
-set(CUSTOM_INC_DIR ${CMAKE_CURRENT_BINARY_DIR}/custom_inc)
-
-# Pick up the port specific variables and apply them
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/ports/${THREADX_ARCH}/${THREADX_TOOLCHAIN})
-
-# Pick up the common stuff
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/common)
 
 
 
+set_property(TARGET mbedcrypto APPEND PROPERTY LINK_INTERFACE_LIBRARIES mbedtls)
 
-# If the user provided an override, copy it to the custom directory
-if (NOT TX_USER_FILE)
-    message(STATUS "Using default tx_user.h file")
-    set(TX_USER_FILE ${CMAKE_CURRENT_LIST_DIR}/common/inc/tx_user_sample.h)
-else()
-    message(STATUS "Using custom tx_user.h file from ${TX_USER_FILE}")
-endif()    
-configure_file(${TX_USER_FILE} ${CUSTOM_INC_DIR}/tx_user.h COPYONLY)
-target_include_directories(${PROJECT_NAME} 
-    PUBLIC 
-    ${CUSTOM_INC_DIR}
-)
-target_compile_definitions(${PROJECT_NAME} PUBLIC "TX_INCLUDE_USER_DEFINE_FILE" )
+# Link threadx libraries to component library
+target_link_libraries(${COMPONENT_LIB} PUBLIC ${threadx_targets})
 
-# Enable a build target that produces a ZIP file of all sources
-set(CPACK_SOURCE_GENERATOR "ZIP")
-set(CPACK_SOURCE_IGNORE_FILES
-  \\.git/
-  \\.github/
-  _build/
-  \\.git
-  \\.gitattributes
-  \\.gitignore
-  ".*~$"
-)
-set(CPACK_VERBATIM_VARIABLES YES)
-include(CPack)
+
