@@ -2,7 +2,7 @@
 # CMakeLists in this exact order for cmake to work correctly
 cmake_minimum_required(VERSION 3.5)
 
-set(COMPONENTS esp32 freertos esptool_py)
+set(COMPONENTS freertos esptool_py)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 

@@ -2,5 +2,8 @@
     "files.associations": {
         "esp_log.h": "c",
         "esp_task.h": "c"
-    }
+    },
+    "cSpell.enableFiletypes": [
+        "markdown"
+    ]
 }
