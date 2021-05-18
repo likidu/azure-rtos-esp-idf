@@ -1,9 +1,11 @@
 idf_build_get_property(idf_target IDF_TARGET)
 
-idf_component_register(SRCS ""
-    INCLUDE_DIRS "threadx/common/inc" "threadx/ports/${THREADX_ARCH}/${THREADX_TOOLCHAIN}/inc"
-    PRIV_REQUIRES soc ${idf_target})
+# idf_component_register(SRCS ""
+#     INCLUDE_DIRS "threadx/common/inc" "threadx/ports/${THREADX_ARCH}/${THREADX_TOOLCHAIN}/inc"
+#     PRIV_REQUIRES soc ${idf_target})
 
+idf_component_register(SRCS ""
+    INCLUDE_DIRS "threadx/common/inc" "threadx/ports/${THREADX_ARCH}/${THREADX_TOOLCHAIN}/inc")
 
 # Needed to for include_next includes to work from within mbedtls
 # include_directories("${COMPONENT_DIR}/port/include")

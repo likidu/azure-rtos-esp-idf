@@ -3,7 +3,7 @@
    byte pool, and block pool.  */
 
 #include <stdio.h>
-#include <xtensa/xtutil.h>
+// #include <xtensa/xtutil.h>
 
 #include "tx_api.h"
 

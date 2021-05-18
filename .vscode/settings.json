@@ -3,7 +3,8 @@
         "esp_log.h": "c",
         "esp_task.h": "c",
         "esp_system.h": "c",
-        "esp_attr.h": "c"
+        "esp_attr.h": "c",
+        "tx_api.h": "c"
     },
     "cSpell.enableFiletypes": [
         "markdown"
