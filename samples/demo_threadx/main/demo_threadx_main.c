@@ -12,7 +12,6 @@
 #define DEMO_BLOCK_POOL_SIZE    100
 #define DEMO_QUEUE_SIZE         100
 
-
 /* Define the ThreadX object control blocks...  */
 
 TX_THREAD               thread_0;
@@ -203,7 +202,7 @@ UINT    status;
 
         /* Print something to show we are making progress. This should use the print
            function from libxtutil which is thread-safe.  */
-        printf("%u %u %u\n", thread_0_counter, thread_1_counter, thread_2_counter);
+        printf("%lu %lu %lu\n", thread_0_counter, thread_1_counter, thread_2_counter);
     }
 }
 

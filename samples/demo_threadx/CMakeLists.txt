@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 # set(COMPONENTS esp32 threadx esptool_py)
-set(EXTRA_COMPONENT_DIRS "../../azure-rtos/components")
+# set(EXTRA_COMPONENT_DIRS "../../azure-rtos/components")
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 

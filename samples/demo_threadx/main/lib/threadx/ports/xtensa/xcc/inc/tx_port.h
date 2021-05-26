@@ -438,13 +438,13 @@ extern unsigned int                 _tx_thread_interrupt_control(unsigned int ne
 
 #define TX_INTERRUPT_SAVE_AREA      register unsigned int interrupt_save;
 
-#ifdef TX_DISABLE_INLINE_MACROS
+// #ifdef TX_DISABLE_INLINE_MACROS
 #define TX_DISABLE                  interrupt_save = _tx_thread_interrupt_control(TX_INT_DISABLE);
 #define TX_RESTORE                  _tx_thread_interrupt_control(interrupt_save);
-#else
-#define TX_DISABLE                  interrupt_save = xthal_disable_interrupts();
-#define TX_RESTORE                  xthal_restore_interrupts(interrupt_save);
-#endif
+// #else
+// #define TX_DISABLE                  interrupt_save = xthal_disable_interrupts();
+// #define TX_RESTORE                  xthal_restore_interrupts(interrupt_save);
+// #endif
 
 
 /* Define the interrupt lockout macros for each ThreadX object.  */

@@ -43,6 +43,15 @@ target_include_directories(${PROJECT_NAME}
 )
 target_compile_definitions(${PROJECT_NAME} PUBLIC "TX_INCLUDE_USER_DEFINE_FILE" )
 
+if (ESP_PLATFORM)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC
+        __XTENSA__
+        __XCC__
+        )
+
+    target_link_libraries(${PROJECT_NAME} PRIVATE idf::xtensa)
+endif()
+
 # Enable a build target that produces a ZIP file of all sources
 set(CPACK_SOURCE_GENERATOR "ZIP")
 set(CPACK_SOURCE_IGNORE_FILES

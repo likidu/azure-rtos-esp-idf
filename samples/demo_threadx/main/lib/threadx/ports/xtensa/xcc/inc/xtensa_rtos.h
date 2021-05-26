@@ -53,7 +53,8 @@
 
 #include    <xtensa/corebits.h>
 #include    <xtensa/config/system.h>
-#include    <xtensa/simcall.h>
+// Liya: Disabled as we are not running on simulated device
+// #include    <xtensa/simcall.h>
 
 /*
 Include any RTOS specific definitions that are needed by this header.

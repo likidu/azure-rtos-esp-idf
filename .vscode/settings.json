@@ -4,7 +4,9 @@
         "esp_task.h": "c",
         "esp_system.h": "c",
         "esp_attr.h": "c",
-        "tx_api.h": "c"
+        "tx_api.h": "c",
+        "core-macros.h": "c",
+        "core.h": "c"
     },
     "cSpell.enableFiletypes": [
         "markdown"

@@ -372,7 +372,8 @@ _xt_thread_wrapper (ULONG arg)
     TX_DISABLE
 
 #if XSHAL_CLIB == XTHAL_CLIB_NEWLIB
-    _impure_ptr = thread_ptr->tx_thread_clib_ptr;
+    // Liya: Disable this for now. Also see freertos/tasks.c L2261 that disabled it
+    // _impure_ptr = thread_ptr->tx_thread_clib_ptr;
 #endif
 #if XSHAL_CLIB == XTHAL_CLIB_XCLIB
     _reent_ptr = thread_ptr->tx_thread_clib_ptr;
