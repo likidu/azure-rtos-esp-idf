@@ -6,7 +6,10 @@
         "esp_attr.h": "c",
         "tx_api.h": "c",
         "core-macros.h": "c",
-        "core.h": "c"
+        "core.h": "c",
+        "tx_port.h": "c",
+        "sdkconfig.h": "c",
+        "task.h": "c"
     },
     "cSpell.enableFiletypes": [
         "markdown"

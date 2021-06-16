@@ -27,8 +27,6 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/ports/${THREADX_ARCH}/${THREADX_TOOLC
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/common)
 
 
-
-
 # If the user provided an override, copy it to the custom directory
 if (NOT TX_USER_FILE)
     message(STATUS "Using default tx_user.h file")

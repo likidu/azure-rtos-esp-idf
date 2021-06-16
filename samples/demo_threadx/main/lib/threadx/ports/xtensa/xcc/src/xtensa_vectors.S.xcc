@@ -1544,10 +1544,10 @@ _xt_alloca_exc:
     rsr     a0, WINDOWBASE  /* grab WINDOWBASE before rotw changes it */
     rotw    -1              /* WINDOWBASE goes to a4, new a0-a3 are scratch */
     rsr     a2, PS
-    extui   a3, a2, XCHAL_PS_OWB_SHIFT, XCHAL_PS_OWB_BITS
+    extui   a3, a2, PS_OWB_SHIFT, PS_OWB_BITS
     xor     a3, a3, a4      /* bits changed from old to current windowbase */
     rsr     a4, EXCSAVE_1   /* restore original a0 (now in a4) */
-    slli    a3, a3, XCHAL_PS_OWB_SHIFT
+    slli    a3, a3, PS_OWB_SHIFT
     xor     a2, a2, a3      /* flip changed bits in old window base */
     wsr     a2, PS          /* update PS.OWB to new window base */
     rsync

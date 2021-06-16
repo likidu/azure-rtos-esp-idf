@@ -62,6 +62,8 @@
    
 #include <string.h>
 
+#include <xtensa/xtruntime.h>
+
 
 /* Define compiler library include files and library-specific macros. */
 
@@ -434,17 +436,28 @@ extern void _xt_coproc_release(void * coproc_sa_base);
     restore macros.
 */
 
-extern unsigned int                 _tx_thread_interrupt_control(unsigned int new_posture);
+static inline UINT xthal_disable_interrupts(void)
+{
+    UINT state = XTOS_SET_INTLEVEL(TX_INT_DISABLE);
+    return state;
+}
+
+static inline void xthal_restore_interrupts(UINT state) {
+    XTOS_RESTORE_JUST_INTLEVEL(state);
+}
+
+// ESP-IDF: use inline marco
+// extern unsigned int                 _tx_thread_interrupt_control(unsigned int new_posture);
 
 #define TX_INTERRUPT_SAVE_AREA      register unsigned int interrupt_save;
 
-// #ifdef TX_DISABLE_INLINE_MACROS
-#define TX_DISABLE                  interrupt_save = _tx_thread_interrupt_control(TX_INT_DISABLE);
-#define TX_RESTORE                  _tx_thread_interrupt_control(interrupt_save);
-// #else
-// #define TX_DISABLE                  interrupt_save = xthal_disable_interrupts();
-// #define TX_RESTORE                  xthal_restore_interrupts(interrupt_save);
-// #endif
+#ifdef TX_DISABLE_INLINE_MACROS
+// #define TX_DISABLE                  interrupt_save = _tx_thread_interrupt_control(TX_INT_DISABLE);
+// #define TX_RESTORE                  _tx_thread_interrupt_control(interrupt_save);
+#else
+#define TX_DISABLE                  interrupt_save = xthal_disable_interrupts();
+#define TX_RESTORE                  xthal_restore_interrupts(interrupt_save);
+#endif
 
 
 /* Define the interrupt lockout macros for each ThreadX object.  */

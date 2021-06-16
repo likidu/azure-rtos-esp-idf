@@ -107,6 +107,7 @@ void xt_unhandled_interrupt(void * arg)
 {
     (void) arg; /* Keep compiler happy */
     exit(-1);
+    // ESP-IDF: TODO: use esp_rom_printf to print error
 }
 
 
@@ -131,6 +132,8 @@ xt_handler xt_set_interrupt_handler(uint32_t n, xt_handler f, void * arg)
     }
 #endif
 
+
+// ESP-IDF: TODO: For XEA2 as ESP32, we don't need this
 #if (XT_USE_INT_WRAPPER || XCHAL_HAVE_XEA3)
     entry = _xt_interrupt_table + n + 1;
 #else
@@ -157,7 +160,8 @@ xt_handler xt_set_interrupt_handler(uint32_t n, xt_handler f, void * arg)
 */
 void xt_interrupt_enable(uint32_t intnum)
 {
-#if XCHAL_HAVE_XEA2
+// ESP-IDF: Use what's defined in ESP-IDF Xtensa core-marcos.h
+/* #if XCHAL_HAVE_XEA2
     uint32_t ps = XT_RSIL(15);
 
     // New INTENABLE = (_xt_intenable | mask) & _xt_vpri_mask.
@@ -165,9 +169,9 @@ void xt_interrupt_enable(uint32_t intnum)
     XT_WSR_INTENABLE(_xt_intenable & _xt_vpri_mask);
     XT_WSR_PS(ps);
     XT_RSYNC();
-#else
+#else */
     xthal_interrupt_enable(intnum);
-#endif
+// #endif
 }
 
 
@@ -177,7 +181,8 @@ void xt_interrupt_enable(uint32_t intnum)
 */
 void xt_interrupt_disable(uint32_t intnum)
 {
-#if XCHAL_HAVE_XEA2
+// ESP-IDF: Use what's defined in ESP-IDF Xtensa core-marcos.h
+/* #if XCHAL_HAVE_XEA2
     uint32_t ps = XT_RSIL(15);
 
     // New INTENABLE = (_xt_intenable & ~mask) & _xt_vpri_mask.
@@ -185,9 +190,9 @@ void xt_interrupt_disable(uint32_t intnum)
     XT_WSR_INTENABLE(_xt_intenable & _xt_vpri_mask);
     XT_WSR_PS(ps);
     XT_RSYNC();
-#else
+#else */
     xthal_interrupt_disable(intnum);
-#endif
+// #endif
 }
 
 

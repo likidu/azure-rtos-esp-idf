@@ -43,8 +43,9 @@
 
 #ifdef __ASSEMBLER__
 #include    <xtensa/coreasm.h>
-#else
-#include    <xtensa/tie/xt_timer.h>
+// ESP-IDF: Not using TIE
+// #else
+// #include    <xtensa/tie/xt_timer.h>
 #endif
 
 #include    <xtensa/corebits.h>
@@ -139,18 +140,29 @@ If using a supported board via the board-independent API defined in xtbsp.h,
 this may be left undefined but XT_BOARD must be defined. The frequency and
 tick divisor will be computed during run-time initialization.
 */
-#ifndef XT_BOARD
-#ifndef XT_CLOCK_FREQ
-#define XT_CLOCK_FREQ       1000000
-#endif
+// #ifndef XT_BOARD
+
+// #ifndef XT_CLOCK_FREQ
+// #define XT_CLOCK_FREQ       1000000
+// #endif
+
+/*
+Derivation of clock divisor for timer tick and interrupt (one per tick).
+*/
+#ifdef XT_CLOCK_FREQ
 #define XT_TICK_DIVISOR     (XT_CLOCK_FREQ / XT_TICK_PER_SEC)
-#else
-#ifndef __ASSEMBLER__
-extern uint32_t xt_tick_divisor;
-extern void     xt_tick_divisor_init(void);
 #endif
-#define XT_TICK_DIVISOR     xt_tick_divisor
-#endif  /* XT_BOARD */
+
+// #else
+
+#ifndef __ASSEMBLER__
+extern uint32_t _xt_tick_divisor;
+extern void     _xt_tick_divisor_init(void);
+#endif  /* __ASSEMBLER__ */
+
+// #define XT_TICK_DIVISOR     xt_tick_divisor
+
+// #endif  /* XT_BOARD */
 
 #endif  /* XT_RTOS_TIMER_INT */
 #endif  /* XTENSA_TIMER_H */

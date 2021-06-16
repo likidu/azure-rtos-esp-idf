@@ -43,8 +43,19 @@
 #include    "xtensa_rtos.h"
 
 
-#ifdef XT_RTOS_TIMER_INT
-#ifndef XT_CLOCK_FREQ
+#ifdef XT_RTOS_TIMER_INT    /* skip all this stuff if no timer int */
+
+// ESP-IDF: XT_CLOCK_FREQ defined in tx_user.h same as FreeRTOS in FreeRTOSConfig.h
+// Although it is not used anymore
+
+/* 6/16: Hack, use esp_clk.c definitions */
+#define MHZ (1000000)
+
+int esp_clk_cpu_freq(void) {
+    return 120 * MHZ;
+}
+
+// #ifndef XT_CLOCK_FREQ
 
 uint32_t _xt_tick_divisor = 0;  /* cached number of cycles per tick */
 
@@ -55,13 +66,20 @@ Called when the processor clock frequency is not known at compile-time.
 */
 void _xt_tick_divisor_init(void)
 {
-    #ifdef XT_BOARD
-    _xt_tick_divisor = xtbsp_clock_freq_hz() / XT_TICK_PER_SEC;
-    #else
-    #error "No way to obtain processor clock frequency"
-    #endif  /* XT_BOARD */
+    // #ifdef XT_BOARD
+    // _xt_tick_divisor = xtbsp_clock_freq_hz() / XT_TICK_PER_SEC;
+    // #else
+    // #error "No way to obtain processor clock frequency"
+    // #endif  /* XT_BOARD */
+    _xt_tick_divisor = esp_clk_cpu_freq() / XT_TICK_PER_SEC;
 }
 
-#endif /* XT_CLOCK_FREQ */
+/* Deprecated, to be removed */
+int xt_clock_freq(void)
+{
+    return esp_clk_cpu_freq();
+}
+
+// #endif /* XT_CLOCK_FREQ */
 #endif /* XT_RTOS_TIMER_INT */
 

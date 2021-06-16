@@ -51,6 +51,19 @@
 #ifndef TX_USER_H
 #define TX_USER_H
 
+// ESP-IDF: Same as defined in FreeRTOSConfig.h
+#ifndef __ASSEMBLER__
+/**
+ * This function is defined to provide a deprecation warning whenever
+ * XT_CLOCK_FREQ macro is used.
+ * Update the code to use esp_clk_cpu_freq function instead.
+ * @return current CPU clock frequency, in Hz
+ */
+int xt_clock_freq(void) __attribute__((deprecated));
+
+#define XT_CLOCK_FREQ   (xt_clock_freq())
+
+#endif   /* __ASSEMBLER__ */
 
 /* Define various build options for the ThreadX port.  The application should either make changes
    here by commenting or un-commenting the conditional compilation defined OR supply the defines 

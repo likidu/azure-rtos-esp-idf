@@ -152,17 +152,20 @@ VOID   _tx_initialize_low_level(VOID)
 
     #ifndef TX_NO_TIMER
 
-    /* Compute tick divisor if clock freq is not compile-time constant. */
-    #ifndef XT_CLOCK_FREQ
+    // ESP-IDF: Same as FreeRTOS port.c, init the tick divisor value.
     _xt_tick_divisor_init();
-    #endif
+
+    /* Compute tick divisor if clock freq is not compile-time constant. */
+    // #ifndef XT_CLOCK_FREQ
+    // _xt_tick_divisor_init();
+    // #endif
 
     /* Set up the periodic tick timer (assume enough time to complete init). */
-    #ifdef XT_CLOCK_FREQ
-    XT_WSR_CCOMPARE(XT_RSR_CCOUNT() + XT_TICK_DIVISOR);
-    #else
-    XT_WSR_CCOMPARE(XT_RSR_CCOUNT() + _xt_tick_divisor);
-    #endif
+    // #ifdef XT_CLOCK_FREQ
+    // XT_WSR_CCOMPARE(XT_RSR_CCOUNT() + XT_TICK_DIVISOR);
+    // #else
+    // XT_WSR_CCOMPARE(XT_RSR_CCOUNT() + _xt_tick_divisor);
+    // #endif
 
     #if XCHAL_HAVE_XEA3
     xt_timer_intnum = XT_TIMER_INTNUM;
