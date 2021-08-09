@@ -56,6 +56,7 @@
 #if XSHAL_CLIB == XTHAL_CLIB_NEWLIB
 
 #include <malloc.h>
+#include <sys/reent.h>
 
 /* NOTE: should have been declared in reent.h... */
 extern void _wrapup_reent(struct _reent * ptr);
@@ -225,30 +226,34 @@ _Mtxunlock (_Rmtx * mtx)
 char * _tx_clib_heap_start = NULL;
 char * _tx_clib_heap_end   = NULL;
 
-void *
-_sbrk_r (struct _reent * reent, int32_t incr)
-{
-    static char * heap_ptr;
-    char * new_heap_ptr;
-    char * alloc_ptr;
+/* 
+  Liki: _sbrk_r was defined in newlib/syscalls.c
+ */
 
-    /* The heap is bound by _tx_clib_heap_{start,end}. */
-    if (heap_ptr == NULL) {
-        heap_ptr = _tx_clib_heap_start;
-    }
+// void *
+// _sbrk_r (struct _reent * reent, int32_t incr)
+// {
+//     static char * heap_ptr;
+//     char * new_heap_ptr;
+//     char * alloc_ptr;
 
-    new_heap_ptr = heap_ptr + incr;
-    if ((heap_ptr == NULL) ||                   /* no heap        */
-        (new_heap_ptr >= _tx_clib_heap_end) ||  /* heap exhausted */
-        (new_heap_ptr < heap_ptr)) {            /* wraparound     */
-        reent->_errno = ENOMEM;
-        return (void *) -1;
-    }
+//     /* The heap is bound by _tx_clib_heap_{start,end}. */
+//     if (heap_ptr == NULL) {
+//         heap_ptr = _tx_clib_heap_start;
+//     }
 
-    alloc_ptr = heap_ptr;
-    heap_ptr = new_heap_ptr;
-    return (void *) alloc_ptr;
-}
+//     new_heap_ptr = heap_ptr + incr;
+//     if ((heap_ptr == NULL) ||                   /* no heap        */
+//         (new_heap_ptr >= _tx_clib_heap_end) ||  /* heap exhausted */
+//         (new_heap_ptr < heap_ptr)) {            /* wraparound     */
+//         reent->_errno = ENOMEM;
+//         return (void *) -1;
+//     }
+
+//     alloc_ptr = heap_ptr;
+//     heap_ptr = new_heap_ptr;
+//     return (void *) alloc_ptr;
+// }
 
 
 /**************************************************************************/
@@ -330,7 +335,9 @@ _tx_clib_reent_cleanup (TX_THREAD * thread_ptr, int32_t partial)
 
     if (partial != 0) {
         /* Perform "atexit" processing and clean up stdio. */
-        _wrapup_reent (reent);
+        // Liki: disable for now
+        // ESP-IDF: TBD: Figure out what it does
+        // _wrapup_reent (reent);
     }
     else {
         /* Free all the heap memory allocated in the reent structure.

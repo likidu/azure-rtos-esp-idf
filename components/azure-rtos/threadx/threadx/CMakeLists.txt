@@ -47,7 +47,7 @@ if (ESP_PLATFORM)
         __XCC__
         )
 
-    target_link_libraries(${PROJECT_NAME} PRIVATE idf::xtensa)
+    # target_link_libraries(${PROJECT_NAME} PRIVATE idf::xtensa)
 endif()
 
 # Enable a build target that produces a ZIP file of all sources

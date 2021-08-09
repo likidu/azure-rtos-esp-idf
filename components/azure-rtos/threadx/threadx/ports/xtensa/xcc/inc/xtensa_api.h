@@ -29,8 +29,8 @@
 #ifndef XTENSA_API_H
 #define XTENSA_API_H
 
+#include <stdbool.h>
 #include <xtensa/hal.h>
-
 #include "xtensa_context.h"
 
 

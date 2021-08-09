@@ -43,12 +43,14 @@ extern xt_exc_handler _xt_exception_table[XCHAL_EXCCAUSE_NUM];
 
 /*
   Default handler for unhandled exceptions.
+  ESP-IDF: CHANGED: We do this in panic.c now
 */
-void xt_unhandled_exception(XtExcFrame *frame)
-{
-    (void) frame; /* Keep compiler happy */
-    exit(-1);
-}
+// void xt_unhandled_exception(XtExcFrame *frame)
+// {
+//     (void) frame; /* Keep compiler happy */
+//     exit(-1);
+// }
+extern void xt_unhandled_exception(XtExcFrame *frame);
 
 
 /*
@@ -109,6 +111,19 @@ void xt_unhandled_interrupt(void * arg)
     exit(-1);
     // ESP-IDF: TODO: use esp_rom_printf to print error
 }
+
+
+/* 
+  ESP-IDF
+  Liki: Copied from ESP-IDF xtensa_intr.c, used by esp_system component
+  Returns true if handler for interrupt is not the default unhandled interrupt handler
+ */
+bool xt_int_has_handler(int intr, int cpu)
+{
+    // return (_xt_interrupt_table[intr*portNUM_PROCESSORS+cpu].handler != xt_unhandled_interrupt);
+    return (_xt_interrupt_table[intr + cpu].handler != xt_unhandled_interrupt);
+}
+
 
 
 /*

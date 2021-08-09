@@ -61,7 +61,10 @@ VOID   _tx_initialize_low_level(VOID)
     extern void   _tx_timer_interrupt(void *);
     extern void * _tx_thread_system_stack_ptr;
     extern void * _tx_initialize_unused_memory;
-    extern char   _end;
+    // Liki: _end should be defined in ld?
+    // ESP-IDF: TBD: use proper ld to define it
+    // extern char   _end;
+    const static char *_end = ".";
 
     #ifdef TX_THREAD_SAFE_CLIB
     extern char __stack;

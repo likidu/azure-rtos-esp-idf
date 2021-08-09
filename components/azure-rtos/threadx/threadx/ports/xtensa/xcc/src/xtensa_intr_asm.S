@@ -154,3 +154,108 @@ _xt_exception_table:
 
 #endif
 
+/*
+Liki: copied from ESP-IDF xtensa component definitions
+ */
+
+/*
+-------------------------------------------------------------------------------
+  unsigned int xt_ints_on ( unsigned int mask )
+
+  Enables a set of interrupts. Does not simply set INTENABLE directly, but
+  computes it as a function of the current virtual priority if XT_USE_SWPRI is
+  enabled.
+  Can be called from interrupt handlers.
+-------------------------------------------------------------------------------
+*/
+
+    .text
+    .align  4
+    .global xt_ints_on
+    .type   xt_ints_on,@function
+
+xt_ints_on:
+
+    ENTRY0
+
+#if XCHAL_HAVE_INTERRUPTS
+#if XT_USE_SWPRI
+    movi    a3, 0
+    movi    a4, _xt_intdata
+    xsr     a3, INTENABLE        /* Disables all interrupts   */
+    rsync
+    l32i    a3, a4, 0            /* a3 = _xt_intenable        */
+    l32i    a6, a4, 4            /* a6 = _xt_vpri_mask        */
+    or      a5, a3, a2           /* a5 = _xt_intenable | mask */
+    s32i    a5, a4, 0            /* _xt_intenable |= mask     */
+    and     a5, a5, a6           /* a5 = _xt_intenable & _xt_vpri_mask */
+    wsr     a5, INTENABLE        /* Reenable interrupts       */
+    mov     a2, a3               /* Previous mask             */
+#else
+    movi    a3, 0
+    xsr     a3, INTENABLE        /* Disables all interrupts   */
+    rsync
+    or      a2, a3, a2           /* set bits in mask */
+    wsr     a2, INTENABLE        /* Re-enable ints */
+    rsync
+    mov     a2, a3               /* return prev mask */
+#endif
+#else
+    movi    a2, 0                /* Return zero */
+#endif
+    RET0
+
+    .size   xt_ints_on, . - xt_ints_on
+
+
+/*
+-------------------------------------------------------------------------------
+  unsigned int xt_ints_off ( unsigned int mask )
+
+  Disables a set of interrupts. Does not simply set INTENABLE directly,
+  but computes it as a function of the current virtual priority if XT_USE_SWPRI is
+  enabled.
+  Can be called from interrupt handlers.
+-------------------------------------------------------------------------------
+*/
+
+    .text
+    .align  4
+    .global xt_ints_off
+    .type   xt_ints_off,@function
+
+xt_ints_off:
+
+    ENTRY0
+#if XCHAL_HAVE_INTERRUPTS
+#if XT_USE_SWPRI
+    movi    a3, 0
+    movi    a4, _xt_intdata
+    xsr     a3, INTENABLE        /* Disables all interrupts    */
+    rsync
+    l32i    a3, a4, 0            /* a3 = _xt_intenable         */
+    l32i    a6, a4, 4            /* a6 = _xt_vpri_mask         */
+    or      a5, a3, a2           /* a5 = _xt_intenable | mask  */
+    xor     a5, a5, a2           /* a5 = _xt_intenable & ~mask */
+    s32i    a5, a4, 0            /* _xt_intenable &= ~mask     */
+    and     a5, a5, a6           /* a5 = _xt_intenable & _xt_vpri_mask */
+    wsr     a5, INTENABLE        /* Reenable interrupts        */
+    mov     a2, a3               /* Previous mask              */
+#else
+    movi    a4, 0
+    xsr     a4, INTENABLE        /* Disables all interrupts   */
+    rsync
+    or      a3, a4, a2           /* set bits in mask */
+    xor     a3, a3, a2           /* invert bits in mask set in mask, essentially clearing them */
+    wsr     a3, INTENABLE        /* Re-enable ints */
+    rsync
+    mov     a2, a4               /* return prev mask */
+#endif
+#else
+    movi    a2, 0                /* return zero */
+#endif
+    RET0
+
+    .size   xt_ints_off, . - xt_ints_off
+
+

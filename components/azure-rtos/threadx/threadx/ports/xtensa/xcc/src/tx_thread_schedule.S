@@ -155,7 +155,8 @@ _tx_thread_schedule:
     //  Load library-specific global context ptr address.  */
 
     #if XSHAL_CLIB == XTHAL_CLIB_NEWLIB
-    movi    a0, _impure_ptr
+    // Liki: _impure_ptr is disabled in tx_clib_lock.c L380
+    // movi    a0, _impure_ptr
     #elif XSHAL_CLIB == XTHAL_CLIB_XCLIB
     movi    a0, _reent_ptr
     #else

@@ -9,7 +9,8 @@
         "core.h": "c",
         "tx_port.h": "c",
         "sdkconfig.h": "c",
-        "task.h": "c"
+        "task.h": "c",
+        "reent.h": "c"
     },
     "cSpell.enableFiletypes": [
         "markdown"

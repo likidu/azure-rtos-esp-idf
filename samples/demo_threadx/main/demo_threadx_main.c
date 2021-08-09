@@ -57,7 +57,7 @@ void    thread_6_and_7_entry(ULONG thread_input);
 
 /* Define main entry point.  */
 
-int main()
+void app_main()
 {
 
     /* Enter the ThreadX kernel.  */
