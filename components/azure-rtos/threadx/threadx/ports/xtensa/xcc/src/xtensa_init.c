@@ -42,6 +42,15 @@
 
 #include    "xtensa_rtos.h"
 
+#include "sdkconfig.h"
+
+#if CONFIG_IDF_TARGET_ESP32
+#include "esp32/clk.h"
+#elif CONFIG_IDF_TARGET_ESP32S2
+#include "esp32s2/clk.h"
+#elif CONFIG_IDF_TARGET_ESP32S3
+#include "esp32s3/clk.h"
+#endif
 
 #ifdef XT_RTOS_TIMER_INT    /* skip all this stuff if no timer int */
 
@@ -49,11 +58,11 @@
 // Although it is not used anymore
 
 /* 6/16: Hack, use esp_clk.c definitions */
-#define MHZ (1000000)
+// #define MHZ (1000000)
 
-int esp_clk_cpu_freq(void) {
-    return 120 * MHZ;
-}
+// int esp_clk_cpu_freq(void) {
+//     return 120 * MHZ;
+// }
 
 // #ifndef XT_CLOCK_FREQ
 
